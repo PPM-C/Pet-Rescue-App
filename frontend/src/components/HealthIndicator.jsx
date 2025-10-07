@@ -1,29 +1,25 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { api } from '../api'
 
-export default function HealthIndicator() {
-  const [status, setStatus] = useState(null)
-  const [loading, setLoading] = useState(false)
+export default function HealthIndicator(){
+  const [up, setUp] = useState(false)
 
-  const check = async () => {
-    try {
-      setLoading(true)
-      const res = await api.health()
-      setStatus(res.db === 'UP' ? 'Conexión abierta' : 'Sin conexión con la DB')
-    } catch {
-      setStatus('Sin conexión con la DB')
-    } finally {
-      setLoading(false)
-    }
-  }
+  useEffect(()=>{
+    let alive = true
+    ;(async()=>{
+      try {
+        const data = await api.health()
+        if (!alive) return
+        setUp((data && (data.status === 'UP' || data.db === 'UP')))
+      } catch { setUp(false) }
+    })()
+    return ()=>{ alive = false }
+  }, [])
 
   return (
-    <div style={{display:'flex', gap:8, alignItems:'center'}}>
-      <button className="btn" onClick={check} disabled={loading}>
-  {loading ? 'Comprobando...' : 'Probar conexión'}
-</button>
-
-      {status && <span>{status}</span>}
+    <div className="health" title="DB status">
+      <span className={`dot ${up ? 'up':'down'}`} />
+      <span>{up ? 'DB: UP':'DB: DOWN'}</span>
     </div>
   )
 }

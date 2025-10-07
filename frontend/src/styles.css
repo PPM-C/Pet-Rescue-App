@@ -1,0 +1,391 @@
+/* ========== Theme ==========
+   Paleta verde suave + grises cálidos
+   Mobile-first, con pequeñas animaciones y sombras sutiles
+================================ */
+:root{
+  --bg: #f6faf7;
+  --surface: #ffffff;
+  --surface-2: #f1f5f3;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --border: #e5ece8;
+
+  --primary: #22c55e;       /* verde principal */
+  --primary-600:#16a34a;
+  --primary-50:#ecfdf5;
+
+  --danger:#ef4444;
+  --danger-50:#fef2f2;
+
+  --warning:#f59e0b;
+  --warning-50:#fffbeb;
+
+  --shadow: 0 6px 20px rgba(16, 24, 40, .06);
+  --radius-xl: 20px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 10px;
+
+  --gap: 14px;
+  --gap-lg: 20px;
+}
+
+*{ box-sizing: border-box }
+html,body,#root{ height:100% }
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a{ color: inherit; text-decoration: none }
+img{ max-width: 100%; display:block }
+
+/* ========== Layout ========== */
+.container{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.header{
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  display:flex; align-items:center; gap: 14px;
+  box-shadow: var(--shadow);
+  z-index: 10;
+}
+
+.brand{
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: .3px;
+  margin: 0;
+}
+
+.navbar{ margin-left: auto; display:flex; gap: 12px; align-items:center }
+.navbar a{
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: var(--muted);
+  transition: .2s ease;
+}
+.navbar a:hover{ background: var(--surface-2); color: var(--text) }
+
+.footer{
+  text-align:center;
+  padding: 30px 0 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* separador fino */
+hr{
+  border: none;
+  height: 1px;
+  background: var(--border);
+  margin: 14px 0;
+}
+
+/* ========== Home tiles (Admin/User) ========== */
+.tiles{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap-lg);
+  margin: 22px 0;
+}
+.tile{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 26px 18px;
+  box-shadow: var(--shadow);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap: 12px;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.tile:hover{ transform: translateY(-2px); box-shadow: 0 10px 26px rgba(16,24,40,.08) }
+.tile-icon{ font-size: 34px }
+.tile-label{ font-weight: 700 }
+
+/* ========== Grid de cards ========== */
+.grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--gap-lg);
+}
+
+/* ========== Card ========== */
+.card{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+
+.card .thumb{
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  background: #f2f4f3;
+}
+
+.card .content{ padding: 14px 14px 16px }
+
+.card .title{
+  margin: 0 0 6px;
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.card .muted{ color: var(--muted); font-size: 13px }
+
+/* Card horizontal (lista Admin Requests, Visits, etc.) */
+.card-row{
+  display:flex; gap: 14px; align-items: center;
+  padding: 12px;
+}
+.card-row .thumb{
+  width: 110px; height: 88px; border-radius: 14px; flex-shrink:0;
+  object-fit: cover;
+}
+
+/* ========== Botones ========== */
+.btn{
+  appearance:none;
+  border: 1px solid transparent;
+  background: var(--surface);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor:pointer;
+  transition: background .18s ease, border-color .18s ease, color .18s ease, transform .05s ease;
+}
+.btn:active{ transform: translateY(1px) }
+
+.btn-primary{
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.btn-primary:hover{ background: var(--primary-600); border-color: var(--primary-600) }
+
+.btn-ghost{
+  background: var(--surface-2);
+  border-color: var(--border);
+}
+.btn-ghost:hover{ background: #e7eee9 }
+
+.btn-outline{
+  background: transparent;
+  border-color: var(--border);
+}
+.btn-outline:hover{ background: var(--surface-2) }
+
+.btn-danger{
+  background: var(--danger);
+  color: #fff;
+  border-color: var(--danger);
+}
+.btn-danger:hover{ background: #dc2626; border-color:#dc2626 }
+
+.btn-link{
+  background: transparent; border-color: transparent; color: var(--primary); padding-left:0;
+}
+.btn-link:hover{ color: var(--primary-600) }
+
+.btn-icon{
+  display:inline-flex; align-items:center; gap: 8px;
+}
+
+/* Botonera en filas */
+.row{ display:flex; gap: 10px; align-items:center }
+
+/* ========== Badges, Bubbles, Pills ========== */
+.badge{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size: 12px; font-weight: 700;
+  background: var(--primary-50); color: var(--primary);
+  border: 1px solid #d1fae5;
+  padding: 6px 10px; border-radius: 999px;
+}
+
+.badge-warning{
+  background: var(--warning-50); color: var(--warning);
+  border: 1px solid #fde68a;
+}
+
+.badge-danger{
+  background: var(--danger-50); color: var(--danger);
+  border: 1px solid #fecaca;
+}
+
+/* Burbuja de notificaciones (para Adoption Requests) */
+.has-bubble{ position: relative }
+.bubble{
+  position: absolute;
+  top: -6px; right: -6px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--warning);
+  color: #fff;
+  font-size: 11px; font-weight: 800;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow: 0 0 0 3px var(--surface);
+}
+
+/* ========== Formularios ========== */
+.form{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.field{ margin-bottom: 14px }
+label{
+  display:block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.control{
+  display:block;
+  width:100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.control::placeholder{ color: #9ca3af }
+.control:focus{
+  border-color: #a7f3d0;
+  box-shadow: 0 0 0 4px #ecfdf5;
+}
+
+/* Área para subir foto (Add Pet/Adopter) */
+.dropzone{
+  border: 2px dashed var(--border);
+  background: var(--surface-2);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  text-align: center;
+  color: var(--muted);
+}
+.dropzone:hover{ background: #eaf3ee }
+
+/* Separadores de secciones en formularios */
+.section-title{
+  margin: 18px 0 10px;
+  font-size: 13px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+
+/* ========== Avatares y listas ========== */
+.avatar{
+  width: 42px; height: 42px; border-radius: 50%;
+  object-fit: cover; background: #eee; flex-shrink:0;
+  border: 1px solid var(--border);
+}
+
+.list{ display:flex; flex-direction:column; gap: 12px }
+.list-item{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  display:flex; gap: 12px; align-items:center;
+  box-shadow: var(--shadow);
+}
+
+/* ========== Favoritos (corazón) ========== */
+.heart{
+  position:absolute; top: 10px; right: 10px;
+  width: 36px; height: 36px; border-radius: 999px;
+  background: rgba(255,255,255,.9);
+  display:grid; place-items:center;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background .15s ease, transform .05s ease;
+}
+.heart:active{ transform: translateY(1px) }
+.heart svg, .heart span{ font-size: 18px; color: #9ca3af }
+.heart.is-active{ background: #fff1f2; border-color: #ffe4e6 }
+.heart.is-active svg, .heart.is-active span{ color: #e11d48 }
+
+/* ========== Visitas (tarjeta con fecha grande a la izquierda) ========== */
+.visit-card{
+  display:grid;
+  grid-template-columns: 80px 1fr;
+  gap: 14px;
+  align-items:center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 12px;
+  box-shadow: var(--shadow);
+}
+.calendar-pill{
+  display:grid; place-items:center;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  height: 80px;
+  font-weight: 800;
+}
+.calendar-pill .day{ font-size: 26px; line-height: 1 }
+.calendar-pill .month{ font-size: 12px; color: var(--muted); text-transform: uppercase }
+
+/* ========== Health Indicator (esquina cabecera) ========== */
+.health{
+  display:flex; gap: 8px; align-items:center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: 12px;
+}
+.dot{
+  width:10px; height:10px; border-radius:50%; background:#9ca3af;
+}
+.dot.up{ background: var(--primary) }
+.dot.down{ background: var(--danger) }
+
+/* ========== Utilidades ========== */
+.muted{ color: var(--muted) }
+.center{ text-align:center }
+.hidden{ display:none !important }
+.space-y > * + *{ margin-top: var(--gap) }
+.space-x{ display:flex; gap: var(--gap) }
+.w-full{ width:100% }
+
+/* ========== Responsive ========== */
+@media (min-width: 640px){
+  .card .thumb{ height: 200px }
+}
+@media (min-width: 768px){
+  .tiles{ grid-template-columns: repeat(4, 1fr) }
+  .card-row .thumb{ width: 120px; height: 96px }
+}
+@media (min-width: 1024px){
+  .header{ padding: 14px 18px }
+  .brand{ font-size: 22px }
+  .card .thumb{ height: 220px }
+}

@@ -1,66 +1,85 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams, Link } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api } from '../../api'
-import ImagePicker from '../../components/ImagePicker.jsx'
-import { MdHome } from 'react-icons/md'
 
-const base = { firstName:'', lastName:'', docId:'', email:'', phone:'', birthDate:'', avatarUrl:'' }
+const empty = { firstName:'', lastName:'', docId:'', email:'', phone:'', birthDate:'' }
 
-export default function AdminAdopterForm() {
+export default function AdminAdopterForm(){
   const { id } = useParams()
-  const isEdit = Boolean(id)
   const nav = useNavigate()
-  const [form, setForm] = useState(base)
+  const [f, setF] = useState(empty)
   const [error, setError] = useState('')
 
-  useEffect(()=> {
-    if (isEdit) (async()=> {
-      try {
+  useEffect(()=>{
+    (async()=>{
+      if(!id) return
+      try{
         const a = await api.getAdopter(id)
-        setForm({
-          firstName:a.firstName||'', lastName:a.lastName||'', docId:a.docId||'',
-          email:a.email||'', phone:a.phone||'', birthDate:a.birthDate||'',
-          avatarUrl:a.avatarUrl||''
-        })
-      } catch(e){ setError(e.message) }
+        setF(a)
+      }catch(e){ setError(e.message) }
     })()
-  }, [id])
+  },[id])
 
-  const onChange = e => {
-    const { name, value } = e.target
-    setForm(f=> ({...f, [name]: value}))
-  }
+  const onChange = e => setF(prev => ({ ...prev, [e.target.name]: e.target.value }))
 
-  const onSubmit = async (e) => {
+  const onSubmit = async(e)=>{
     e.preventDefault()
-    try {
-      if (isEdit) await api.updateAdopter(id, form)
-      else await api.createAdopter(form)
+    try{
+      if(id) await api.updateAdopter(id, f)
+      else await api.createAdopter(f)
       nav('/admin/adopters')
-    } catch(e){ setError(e.message) }
+    }catch(e){ setError(e.message) }
   }
 
   return (
     <div>
-      <div className="row" style={{marginBottom: 12}}>
-        <Link className="btn btn-ghost" to="/admin"><MdHome style={{marginRight:6}}/> Admin Home</Link>
+      <div className="row" style={{marginBottom:12}}>
+        <Link className="btn btn-ghost" to="/admin">🏠 Admin</Link>
+        <Link className="btn btn-ghost" to="/admin/adopters">🧑‍🤝‍🧑 Adopters</Link>
       </div>
 
-      <form onSubmit={onSubmit} className="form-grid two" style={{maxWidth: 700}}>
-        <h2 style={{gridColumn:'1/-1'}}>{isEdit ? 'Editar Adopter' : 'Add Adopter'}</h2>
-        {error && <p className="alert-error" style={{gridColumn:'1/-1'}}>Error: {error}</p>}
-
-        <div className="field"><label>Nombre</label><input className="input" name="firstName" value={form.firstName} onChange={onChange} required/></div>
-        <div className="field"><label>Apellidos</label><input className="input" name="lastName" value={form.lastName} onChange={onChange} required/></div>
-        <div className="field"><label>DNI</label><input className="input" name="docId" value={form.docId} onChange={onChange} required/></div>
-        <div className="field"><label>Email</label><input className="input" type="email" name="email" value={form.email} onChange={onChange} required/></div>
-        <div className="field"><label>Teléfono</label><input className="input" name="phone" value={form.phone} onChange={onChange} required/></div>
-        <div className="field"><label>Fecha nacimiento</label><input className="input" type="date" name="birthDate" value={form.birthDate} onChange={onChange} required/></div>
-        <ImagePicker label="Foto (avatar)" value={form.avatarUrl} onChange={v=>setForm(f=>({...f, avatarUrl:v}))}/>
-        <div style={{gridColumn:'1/-1'}} className="row">
-          <button className="btn btn-primary" type="submit">{isEdit ? 'Guardar' : 'Crear'}</button>
-          <Link className="btn" to="/admin/adopters">Cancelar</Link>
+      <form className="form" onSubmit={onSubmit}>
+        <div className="row" style={{justifyContent:'space-between'}}>
+          <h2>{id ? 'Edit Adopter' : 'Add Adopter'}</h2>
+          <button className="btn btn-primary">{id ? 'Save' : 'Create'}</button>
         </div>
+
+        {error && <p className="muted">Error: {error}</p>}
+
+        <div className="row">
+          <div className="field" style={{flex:1}}>
+            <label>First Name</label>
+            <input className="control" name="firstName" value={f.firstName} onChange={onChange}/>
+          </div>
+          <div className="field" style={{flex:1}}>
+            <label>Last Name</label>
+            <input className="control" name="lastName" value={f.lastName} onChange={onChange}/>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="field" style={{flex:1}}>
+            <label>Document</label>
+            <input className="control" name="docId" value={f.docId} onChange={onChange}/>
+          </div>
+          <div className="field" style={{flex:1}}>
+            <label>Birth Date</label>
+            <input type="date" className="control" name="birthDate" value={f.birthDate || ''} onChange={onChange}/>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="field" style={{flex:1}}>
+            <label>Email</label>
+            <input type="email" className="control" name="email" value={f.email} onChange={onChange}/>
+          </div>
+          <div className="field" style={{flex:1}}>
+            <label>Phone</label>
+            <input className="control" name="phone" value={f.phone} onChange={onChange}/>
+          </div>
+        </div>
+
+        <div className="dropzone">Upload Photo • Browse Files</div>
       </form>
     </div>
   )

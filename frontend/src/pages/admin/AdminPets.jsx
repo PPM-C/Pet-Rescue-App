@@ -1,43 +1,50 @@
 import { useEffect, useState } from 'react'
-import { api } from '../../api'
-import { Link, useNavigate } from 'react-router-dom'
-import { MdHome } from 'react-icons/md'
+import { getPets, deletePet } from '../../services/pets'
 
-export default function AdminPets() {
-  const nav = useNavigate()
-  const [items, setItems] = useState([])
-  const [loading, setLoading] = useState(false)
+
+export default function AdminPets(){
+  const [pets, setPets] = useState([])
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  useEffect(()=>{ load() }, [])
+
   const load = async () => {
-    try { setLoading(true); setError(''); const page = await api.listPets(); setItems(page.content || []) }
-    catch(e){ setError(e.message) } finally { setLoading(false) }
+    try{
+      setLoading(true)
+      setError('')
+      const data = await getPets()
+      setPets(Array.isArray(data) ? data : [])
+    }catch(e){
+      setError('No se pudieron cargar los pets')
+    }finally{
+      setLoading(false)
+    }
   }
-  const del = async (id) => {
-    if (!confirm('¿Eliminar mascota?')) return
-    try { await api.deletePet(id); load() } catch(e){ alert(e.message) }
+
+  useEffect(() => { load() }, [])
+
+  const handleDelete = async (id) => {
+    if(!confirm('¿Borrar este pet?')) return
+    try{
+      await deletePet(id)
+      setPets(prev => prev.filter(p => p.id !== id))
+    }catch(e){
+      alert('Error al borrar')
+    }
   }
+
+  if(loading) return <div className="container"><div className="header"><span className="title">Pets</span></div><p>Cargando…</p></div>
+  if(error)   return <div className="container"><div className="header"><span className="title">Pets</span></div><p style={{color:'#b93333'}}>{error}</p></div>
+
   return (
-    <div>
-      <div className="row" style={{marginBottom: 12}}>
-        <Link className="btn btn-ghost" to="/admin"><MdHome style={{marginRight:6}}/> Admin Home</Link>
-        <button className="btn btn-primary" onClick={()=>nav('/admin/pets/new')}>+ Add Pet</button>
-      </div>
-      <h2>Pets</h2>
-      {loading && <p>Cargando...</p>}
-      {error && <p className="alert-error">Error: {error}</p>}
-      <div className="grid">
-        {items.map(p=>(
-          <div key={p.id} className="card card-row">
-            <img className="thumb" src={p.photoUrl || 'https://placehold.co/200x200?text=Pet'} alt={p.name}/>
-            <div style={{flex:1}}>
-              <h3 className="title">{p.name}</h3>
-              <div className="muted">{p.species} • {p.sex} • {p.size}</div>
-              <div><span className="badge badge-neutral">{p.status}</span></div>
-            </div>
-            <div className="row">
-              <Link className="btn" to={`/admin/pets/${p.id}/edit`}>Editar</Link>
-              <button className="btn" onClick={()=>del(p.id)}>Eliminar</button>
+    <div className="container">
+      <div className="header"><span className="title">Pets</span></div>
+      <div className="list" style={{marginTop:16}}>
+        {pets.map(p => (
+          <div className="item" key={p.id}>
+            <strong>{p.name}</strong> — {p.species} — {p.status}
+            <div style={{display:'flex', gap:8, marginTop:8}}>
+              <button className="btn secondary">Edit</button>
+              <button className="btn secondary" onClick={() => handleDelete(p.id)}>Delete</button>
             </div>
           </div>
         ))}

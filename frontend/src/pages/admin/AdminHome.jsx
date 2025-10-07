@@ -1,30 +1,50 @@
-import Tile from '../../components/Tile.jsx'
+import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { api } from '../../api'
-import { MdPets, MdAddCircle, MdSearch, MdPeople, MdEvent, MdAssignment } from 'react-icons/md'
 
-export default function AdminHome() {
-  const [pending, setPending] = useState(0);
+export default function AdminHome(){
+  const [pending, setPending] = useState(0)
 
-  useEffect(()=> {
+  useEffect(()=>{
     (async()=>{
-      try {
-        const page = await api.listAdoptionRequests();
-        const list = page.content || [];
-        setPending(list.filter(r => r.status === 'Pending').length);
-      } catch { setPending(0); }
-    })();
-  }, []);
+      try{
+        const all = await api.listRequests()
+        setPending(all.filter(r => r.status === 'Pending').length)
+      }catch{ setPending(0) }
+    })()
+  },[])
 
   return (
     <div className="tiles">
-      <Tile to="/admin/adoption-requests" icon={<MdAssignment/>} label="Adoption Requests" badge={pending || null}/>
-      <Tile to="/admin/search" icon={<MdSearch/>} label="Search"/>
-      <Tile to="/admin/pets" icon={<MdPets/>} label="Pets"/>
-      <Tile to="/admin/pets/new" icon={<MdAddCircle/>} label="Add Pet"/>
-      <Tile to="/admin/adopters" icon={<MdPeople/>} label="Adopters"/>
-      <Tile to="/admin/adopters/new" icon={<MdAddCircle/>} label="Add Adopter"/>
-      <Tile to="/admin/visits" icon={<MdEvent/>} label="Visits"/>
+      <Link className="tile has-bubble" to="/admin/adoption-requests">
+        <div className="tile-icon">🔔</div>
+        <div className="tile-label">Adoption Requests</div>
+        {pending > 0 && <div className="bubble">{pending}</div>}
+      </Link>
+      <Link className="tile" to="/admin/search">
+        <div className="tile-icon">🔎</div>
+        <div className="tile-label">Search</div>
+      </Link>
+      <Link className="tile" to="/admin/pets">
+        <div className="tile-icon">🐾</div>
+        <div className="tile-label">Pets</div>
+      </Link>
+      <Link className="tile" to="/admin/pets/new">
+        <div className="tile-icon">➕</div>
+        <div className="tile-label">Add Pet</div>
+      </Link>
+      <Link className="tile" to="/admin/adopters">
+        <div className="tile-icon">🧑‍🤝‍🧑</div>
+        <div className="tile-label">Adopters</div>
+      </Link>
+      <Link className="tile" to="/admin/adopters/new">
+        <div className="tile-icon">➕</div>
+        <div className="tile-label">Add Adopter</div>
+      </Link>
+      <Link className="tile" to="/admin/visits">
+        <div className="tile-icon">📅</div>
+        <div className="tile-label">Visits</div>
+      </Link>
     </div>
   )
 }

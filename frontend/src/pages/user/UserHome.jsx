@@ -1,13 +1,24 @@
-import Tile from '../../components/Tile.jsx'
-import { MdPets, MdFavorite, MdAssignment, MdEvent } from 'react-icons/md'
+import { Link } from 'react-router-dom'
 
-export default function UserHome() {
+export default function UserHome(){
   return (
     <div className="tiles">
-      <Tile to="/user/pets" icon={<MdPets/>} label="Pets"/>
-      <Tile to="/user/favorites" icon={<MdFavorite/>} label="Lovely Pets"/>
-      <Tile to="/user/adoption-form" icon={<MdAssignment/>} label="Adoption Form"/>
-      <Tile to="/user/visit-request" icon={<MdEvent/>} label="Visit Request"/>
+      <Link className="tile" to="/user/pets">
+        <div className="tile-icon">🐾</div>
+        <div className="tile-label">Pets</div>
+      </Link>
+      <Link className="tile" to="/user/favorites">
+        <div className="tile-icon">❤️</div>
+        <div className="tile-label">Lovely Pets</div>
+      </Link>
+      <Link className="tile" to="/user/adoption-form">
+        <div className="tile-icon">📝</div>
+        <div className="tile-label">Adoption Forms</div>
+      </Link>
+      <Link className="tile" to="/user/visit-request">
+        <div className="tile-icon">📅</div>
+        <div className="tile-label">Visit Request</div>
+      </Link>
     </div>
   )
 }
